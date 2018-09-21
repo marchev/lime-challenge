@@ -1,0 +1,21 @@
+{
+  "name": "lime-challenge",
+  "version": "1.0.0",
+  "description": "Lime challenge solutions",
+  "main": "main.js",
+  "repository": "https://github.com/marchev/lime-challenge",
+  "author": "Martin Marchev",
+  "license": "MIT",
+  "private": true,
+  "dependencies": {
+    "request": "2.88.0",
+    "request-promise": "4.2.2"
+  },
+  "devDependencies": {
+    "jest": "23.6.0",
+    "jest-mock-console": "0.4.0"
+  },
+  "scripts": {
+    "test": "jest"
+  }
+}
