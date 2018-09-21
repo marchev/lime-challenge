@@ -1,4 +1,4 @@
-const { checkForBalancedBraces } = require('./02_balanced_braces');
+const { checkForBalancedBraces } = require('./balanced_braces');
 
 test('invalid input results in error', () => {
   expect(() => {

@@ -1,17 +1,34 @@
-const { rp } = require('request-promise');
+const rp = require('request-promise');
 
-const URL = "https://jsonmock.hackerrank.com/api/movies/search/?Title=foo&page=1"
-
-exports.getMovieTitles = (substr) => {
-  const results = [];
-
-  const firstPageResults = getResults(substr, 1);
-
-  firstPageResults.then(function (resp) {
-    console.log(resp);
-  });
-
-  return results;
+exports.getMovieTitles = keyword => {
+  return getNumOfPages(keyword)
+    .then(numOfPages => buildRangeOfPages(numOfPages))
+    .map(currentPage => fetchResultsPage(keyword, currentPage))
+    .map(currentResult => extractMovieTitles(currentResult))
+    .reduce((previous, current) => previous.concat(current), [])
+    .then(results => results.sort());
 }
 
-getResults = (title, page) => { return rp(`https://jsonmock.hackerrank.com/api/movies/search/?Title=${title}&page=${page}`); }
+extractMovieTitles = apiResponse => {
+  const movieTitles = [];
+  apiResponse['data'].forEach(poster => {
+      movieTitles.push(poster['Title']);
+  });
+  return movieTitles;
+}
+
+getNumOfPages = keyword => fetchResultsPage(keyword).then(resp => resp['total_pages']);
+
+fetchResultsPage = (keyword, page) => {
+	const options = {
+      uri: `https://jsonmock.hackerrank.com/api/movies/search/`,
+      qs: {
+      	Title: `${keyword}`,
+      	page: `${page}`
+      },
+      json: true
+	};
+	return rp(options);
+}
+
+buildRangeOfPages = numOfPages => [...Array(numOfPages).keys()].map(i => i + 1);
